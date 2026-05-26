@@ -373,7 +373,8 @@ ${pageData.text}`;
               cached_at: Date.now(),
             });
           } catch (e) {
-            showError('Could not parse AI response. Try again.');
+            console.error('[Fine Print Decoder] Parse error:', e.message, '\nRaw:', response.data?.slice(0, 300));
+            showError('Could not parse AI response. Try again — or switch to a different model in ⚙ Settings.');
           }
         }
       );
