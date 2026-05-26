@@ -529,6 +529,7 @@ h1 {
   padding-right: 28px;
 }
 .model-select option { background: #111118; color: #eeeef5; }
+.model-select option:first-child { font-weight: 600; }
 
 .toggle-vis-btn {
   background: none; border: none;
