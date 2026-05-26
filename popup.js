@@ -361,8 +361,12 @@ ${pageData.text}`;
             if (!raw.startsWith('{')) {
               const match = raw.match(/\{[\s\S]*\}/);
               if (match) raw = match[0];
+              else throw new Error('No JSON object found in response');
             }
             const analysis = JSON.parse(raw);
+            if (typeof analysis.score !== 'number' || !analysis.verdict) {
+              throw new Error('Response missing required fields');
+            }
             renderResult(analysis);
             chrome.storage.session.set({
               cached_analysis: JSON.stringify(analysis),
