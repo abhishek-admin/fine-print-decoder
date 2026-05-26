@@ -401,7 +401,8 @@ h1 {
 .result-card:hover {
   border-color: var(--border-mid);
   background: var(--surface2);
-  transition: background 0.2s, border-color 0.2s;
+  transform: translateX(2px);
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .card-title {
