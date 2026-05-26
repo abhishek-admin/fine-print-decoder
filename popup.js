@@ -336,6 +336,7 @@ ${pageData.text}`;
       const savedModel = await new Promise(r =>
         chrome.storage.local.get(['gemini_model'], d => r(d.gemini_model || 'gemini-3.5-flash'))
       );
+      console.log('[Fine Print Decoder] Using model:', savedModel);
 
       chrome.runtime.sendMessage(
         {
