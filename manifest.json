@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Fine Print Decoder",
+  "description": "Open any Terms & Conditions or Privacy Policy — Gemini reads the fine print and flags what they don't want you to notice.",
+  "version": "1.0.0",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "32": "icons/icons32.png",
+      "128": "icons/icons128.png"
+    }
+  },
+  "icons": {
+    "32": "icons/icons32.png",
+    "128": "icons/icons128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "https://openrouter.ai/*"
+  ]
+}
