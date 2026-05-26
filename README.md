@@ -1,103 +1,124 @@
-# Fine Print Decoder
+# ⚖ Fine Print Decoder
 
-> Open any Terms & Conditions or Privacy Policy — Gemini reads the fine print and flags what they don't want you to notice.
+> **Open any Terms & Conditions page. Gemini 3.5 Flash reads the fine print.**
+> Red flags, hidden clauses, and a plain-English trust score — in 8 seconds.
 
-![demo](demo.gif)
+<div align="center">
 
----
+[![Chrome MV3](https://img.shields.io/badge/Chrome-Manifest_V3-14b8a6?style=for-the-badge&logo=google-chrome&logoColor=white)](https://developer.chrome.com/docs/extensions/)
+[![Gemini AI](https://img.shields.io/badge/Gemini-3.5_Flash-D4AF37?style=for-the-badge&logo=google-gemini&logoColor=white)](https://ai.google.dev/)
+[![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
+[![Streak](https://img.shields.io/badge/Day-12_/_180-teal?style=for-the-badge&logo=github&logoColor=white)](https://x.com/happy_ships)
 
-## What It Does
-
-A Chrome extension that acts as your personal legal analyst. Navigate to any Terms & Conditions, Privacy Policy, or End User License Agreement page and click **Decode This Page**. Gemini reads the full text and returns:
-
-- **Trust Score** — 0–100 rating with animated visual ring (0 = extremely harmful, 100 = completely safe)
-- **Verdict** — Safe / Caution / Danger with a one-sentence explanation
-- **🚩 Red Flags** — Clearly harmful or deceptive clauses you need to know about
-- **⚠ Hidden Clauses** — Buried terms most users would never notice
-- **📋 Plain Summary** — What you're actually agreeing to, in plain English
-
-**Features:**
-- 🔍 **Legal X-Ray UI** — Animated scan line loading, SVG score ring, staggered card entrance
-- 📊 **Animated score counter** — Counts up from 0 to the final score on every analysis
-- 🎨 **Color-coded verdict** — Red for Danger, Amber for Caution, Teal for Safe
-- 🔄 **10-minute session cache** — Reopen the popup and your last result is instantly restored
-- ⚙ **Settings panel** — Update or clear API keys at any time
-- ☁ **OpenRouter fallback** — Automatically falls back to OpenRouter if Gemini quota is hit
+</div>
 
 ---
 
-## Getting Started
+## 📖 The Problem & The Solution
 
-### Step 1 — Get a Gemini API Key (free)
+Nobody reads Terms & Conditions. That's by design — legal teams write them to be long, dense, and deliberately hard to parse. The average ToS is 8,000 words. Reading it properly takes 30 minutes. Nobody does it.
 
-1. Go to [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+The result: people unknowingly agree to data selling, binding arbitration, retroactive pricing changes, and contact list access every day.
+
+**Fine Print Decoder** fixes this. Navigate to any Terms of Service, Privacy Policy, or EULA page, click once, and Gemini 3.5 Flash returns a structured legal X-ray:
+
+- A **Trust Score** from 0–100
+- A **Verdict** (Safe / Caution / Danger) with a one-sentence reason
+- **🚩 Red Flags** — clauses that directly harm you
+- **⚠ Hidden Clauses** — terms buried where nobody looks
+- **📋 Plain Summary** — what you're actually agreeing to, in plain English
+
+![Demo](demo.gif)
+
+---
+
+## ⚡ Core Features
+
+- 🔍 **Legal X-Ray UI** — Animated scan line sweeps a document graphic while Gemini reads. No spinner — an actual visual metaphor for what's happening.
+- 📊 **Animated Trust Score** — SVG ring counts up from 0 to the final score. Red for Danger, Amber for Caution, Teal for Safe.
+- 🃏 **Staggered Insight Cards** — Red Flags, Hidden Clauses, and Plain Summary cards slide in with staggered delays, color-coded by severity.
+- 🪟 **In-Page Popup Detection** — Detects open modals and dialogs (`dialog[open]`, `[role="dialog"]`, OneTrust, Cookiebot, Bootstrap) and reads the T&C text directly from them — no need to navigate to a separate page.
+- 🎛 **Model Selector** — Switch between Gemini 3.5 Flash, 2.5 Flash, and 2.0 Flash in Settings.
+- 🔄 **10-Minute Session Cache** — Reopen the popup and your last analysis is instantly restored.
+- ✕ **Reset Button** — Clear the result and return to idle without re-analyzing.
+- ☁ **OpenRouter Fallback** — Automatically falls back to OpenRouter if Gemini quota is hit.
+
+---
+
+## 🛠 Getting Started
+
+### 1. Get a Gemini API Key (free)
+1. Visit [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 2. Click **Create API key**
 3. Copy the key (starts with `AIza...`)
 
-### Step 2 — Install the extension
-
+### 2. Load the Extension
 1. Clone or download this repository
-2. Open `chrome://extensions`
-3. Enable **Developer mode** (top-right toggle)
+2. Open Chrome → `chrome://extensions`
+3. Toggle on **Developer mode** (top-right)
 4. Click **Load unpacked** → select the `fine-print-decoder` folder
-5. Click the extension icon in the toolbar
 
-### Step 3 — First launch
+### 3. First Launch
+On first open, paste your **Gemini API Key** (or an OpenRouter key — either works) and click **Start Decoding →**.
 
-On first open, you'll see the onboarding screen:
-1. Paste your **Gemini API Key** (or an OpenRouter key — either one works)
-2. Click **Start Decoding →**
-3. Navigate to any Terms & Conditions or Privacy Policy page
-4. Click **Decode This Page**
-
----
-
-## How to Use
-
-1. Navigate to any website's **Terms of Service**, **Privacy Policy**, or **EULA** page
-2. Click the Fine Print Decoder icon in your Chrome toolbar
+### 4. Decode Any Page
+1. Navigate to any Terms of Service, Privacy Policy, or EULA page
+2. Click the ⚖ extension icon in your toolbar
 3. Click **⚖ Decode This Page**
-4. Watch the scan animation while Gemini reads the document
-5. Review your **Trust Score**, **Verdict**, and color-coded insight cards
-6. Click **📋 Copy** to copy the full analysis to your clipboard
-
-**Tip:** Works best on pages with the actual policy text visible in the DOM. If a page loads content dynamically, scroll down first to trigger full load before decoding.
+4. If the T&C is in an on-page popup, keep the popup open before clicking Decode
 
 ---
 
-## Tech Stack
+## 🧠 Engineering Highlight: Gemini 3.5 Flash Thinking Mode
 
-- **Gemini 3.5 Flash** — Structured JSON analysis via `generativelanguage.googleapis.com` (released Google I/O 2026)
-- **OpenRouter** — Fallback chain with Gemini 2.5 Flash → DeepSeek → Llama 3.3
-- **Manifest V3** — `chrome.scripting.executeScript` for page extraction (no persistent content script)
-- **Vanilla JS** — Zero build step, zero dependencies
-- **SVG Score Ring** — CSS + JS animated circle progress indicator
-- **CSS Scan Animation** — Document scan line built entirely in CSS keyframes
+Gemini 3.5 Flash enables **thinking by default** — it returns a reasoning trace part *before* the actual answer part. The `candidates[0].content.parts` array looks like:
 
----
-
-## Architecture
-
-```
-popup.html  →  popup.js
-                  ↓
-          chrome.scripting.executeScript()
-            → extracts page text (up to 12,000 chars)
-                  ↓
-          chrome.runtime.sendMessage (callGeminiBackground)
-                  ↓
-          background.js → Gemini 2.0 Flash
-            → returns structured JSON:
-               { score, verdict, verdict_reason,
-                 red_flags[], hidden_clauses[], plain_summary[] }
-                  ↓
-          renderResult() → animateScore() + SVG ring + staggered cards
+```json
+[
+  { "thought": true, "text": "Let me analyze this document..." },
+  { "text": "{\"score\": 23, \"verdict\": \"Danger\", ...}" }
+]
 ```
 
+Reading `parts[0].text` — the standard pattern from all Gemini 2.x code — grabs the thinking chunk, not the JSON. The result: `JSON.parse` fails and the user sees an error.
+
+The fix is two-pronged:
+1. **Disable thinking** (`thinkingConfig: { thinkingBudget: 0 }`) — for structured JSON output we don't need the reasoning trace and it wastes tokens.
+2. **Filter by `!part.thought`** as a fallback — finds the first non-thought part in case the config is ignored.
+
+```js
+const parts = data?.candidates?.[0]?.content?.parts || [];
+const answerPart = parts.find(p => !p.thought) || parts[0];
+return answerPart?.text || '';
+```
+
+> [!NOTE]
+> This affects any project using Gemini 3.5 Flash that expects clean text output. The `parts[0]` pattern that worked in Gemini 2.x silently breaks in 3.5 Flash with thinking enabled.
+
 ---
 
-## Day 12/180
+## 🔧 Technical Stack
 
-Part of my **[180-day Chrome extension challenge](https://x.com/happy_ships)** — shipping one extension every day.
+- **Extension Framework**: Chrome Extension Manifest V3
+- **Primary AI Model**: Gemini 3.5 Flash via `generativelanguage.googleapis.com` (Google I/O 2026)
+- **Fallback Engine**: OpenRouter API (Gemini 2.5 Flash → DeepSeek → Llama 3.3)
+- **Page Extraction**: `chrome.scripting.executeScript` — no persistent content script
+- **Modal Detection**: `dialog[open]`, `[role="dialog"]`, OneTrust, Cookiebot, Bootstrap modal selectors
+- **Score Ring**: SVG `stroke-dashoffset` animation driven by JS counter
+- **Client**: Pure Vanilla JS — zero build step, zero dependencies
 
-IO Sprint #5 | Built for Google I/O 2026 | May 26, 2026
+---
+
+## 📅 180 Days of Building
+
+This project is part of a larger developer journey: shipping one useful AI tool every day for 180 days.
+
+This release is part of the **Google I/O 2026 Sprint** (`IO Sprint #5`), powered by **Gemini 3.5 Flash**.
+
+Follow along for daily releases and tech deep dives:
+- **Twitter / X**: [@happy_ships](https://x.com/happy_ships)
+- **Day**: `12 / 180`
+
+---
+
+*Licensed under the [MIT License](LICENSE).*
