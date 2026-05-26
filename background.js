@@ -59,6 +59,8 @@ async function handleGeminiCall(prompt, options = {}) {
       generationConfig: {
         maxOutputTokens: options.maxTokens || 2048,
         temperature: options.temperature ?? 0.7,
+        // Disable thinking — we need clean JSON output, not reasoning traces
+        thinkingConfig: { thinkingBudget: 0 },
       },
     };
 
@@ -79,7 +81,11 @@ async function handleGeminiCall(prompt, options = {}) {
     }
 
     const data = await response.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    // Gemini 3.5 Flash returns multiple parts when thinking is active.
+    // Find the first non-thought part (the actual answer).
+    const parts = data?.candidates?.[0]?.content?.parts || [];
+    const answerPart = parts.find(p => !p.thought) || parts[0];
+    return answerPart?.text || '';
 
   } catch (error) {
     const msg = error.message.toLowerCase();

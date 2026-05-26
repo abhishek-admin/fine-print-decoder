@@ -54,6 +54,8 @@ async function callGeminiDirect(prompt, options = {}) {
     generationConfig: {
       maxOutputTokens: options.maxTokens || 2048,
       temperature: options.temperature ?? 0.7,
+      // Disable thinking for clean JSON / deterministic output
+      thinkingConfig: { thinkingBudget: 0 },
     },
   };
 
@@ -76,7 +78,10 @@ async function callGeminiDirect(prompt, options = {}) {
   }
 
   const data = await response.json();
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  // Skip thinking parts — find the first actual answer part
+  const parts = data?.candidates?.[0]?.content?.parts || [];
+  const answerPart = parts.find(p => !p.thought) || parts[0];
+  const text = answerPart?.text;
   if (!text) throw new Error('Empty response from Gemini');
   return text;
 }
