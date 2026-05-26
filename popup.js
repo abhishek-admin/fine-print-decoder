@@ -301,12 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
         );
       }
 
-      // Let user know if we read from a modal vs page
+      // Let user know what was detected + how much text was found
       const loadingSub = document.getElementById('loading-sub');
       if (loadingSub) {
+        const charCount = pageData.text.length.toLocaleString();
         loadingSub.textContent = pageData.source === 'modal'
-          ? 'Reading from open popup / dialog'
-          : 'Gemini is scanning for hidden clauses';
+          ? `Reading from open popup / dialog · ${charCount} chars`
+          : `Gemini 3.5 Flash scanning ${charCount} chars`;
       }
 
       const prompt = `Analyze the following Terms & Conditions or Privacy Policy text.
