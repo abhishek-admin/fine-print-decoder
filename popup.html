@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fine Print Decoder</title>
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    :root { --accent: #14b8a6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <span class="logo">⚖</span>
+        <h1>Fine Print Decoder</h1>
+      </div>
+      <div class="header-right">
+        <span class="badge">Legal X-Ray</span>
+        <button id="settings-btn" class="settings-btn" title="API Settings">⚙</button>
+      </div>
+    </div>
+
+    <!-- Onboarding -->
+    <div id="onboarding" class="hidden">
+      <p class="onboarding-title">⚖ Decode the Fine Print</p>
+      <p class="onboarding-desc">Open any <strong>Terms & Conditions</strong> or <strong>Privacy Policy</strong> page, then click <em>Decode This Page</em>. Gemini reads the fine print and surfaces what they don't want you to notice — red flags, hidden clauses, and a plain-English summary.</p>
+      <div class="onboard-field">
+        <label class="settings-label">Gemini API Key <span class="settings-hint">— <a href="https://aistudio.google.com/app/apikey" target="_blank">Get free key ↗</a></span></label>
+        <div class="settings-row">
+          <input type="password" id="onboard-gemini-input" class="settings-input" placeholder="AIza..." />
+          <button id="onboard-toggle-gemini" class="toggle-vis-btn">👁</button>
+        </div>
+      </div>
+      <div class="onboard-field">
+        <label class="settings-label">OpenRouter API Key <span class="settings-hint">— <a href="https://openrouter.ai/keys" target="_blank">Get key ↗</a></span></label>
+        <div class="settings-row">
+          <input type="password" id="onboard-openrouter-input" class="settings-input" placeholder="sk-or-..." />
+          <button id="onboard-toggle-openrouter" class="toggle-vis-btn">👁</button>
+        </div>
+      </div>
+      <button id="onboard-save-btn" class="primary-btn">Start Decoding →</button>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="hidden">
+      <p class="subtitle">Navigate to any Terms &amp; Conditions or Privacy Policy page, then click below.</p>
+      <button id="action-btn" class="primary-btn decode-btn">
+        <span class="decode-icon">⚖</span>
+        <span>Decode This Page</span>
+      </button>
+    </div>
+
+    <!-- Loading: Scan Animation -->
+    <div id="loading" class="hidden">
+      <div class="scan-wrap">
+        <div class="scan-doc">
+          <div class="scan-doc-lines"></div>
+          <div class="scan-line"></div>
+        </div>
+      </div>
+      <p class="loading-label">Reading the fine print<span class="loading-dots"></span></p>
+      <p class="loading-sub" id="loading-sub">Gemini is scanning for hidden clauses</p>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="hidden">
+
+      <!-- Score + Verdict Row -->
+      <div class="verdict-row">
+        <div class="score-ring-wrap">
+          <svg class="score-ring" viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="28" class="ring-track"/>
+            <circle cx="36" cy="36" r="28" class="ring-fill" id="ring-fill"/>
+          </svg>
+          <span class="score-num" id="score-num">0</span>
+          <span class="score-label">/ 100</span>
+        </div>
+        <div class="verdict-info" id="verdict-info">
+          <span class="verdict-tag" id="verdict-tag">—</span>
+          <p class="verdict-reason" id="verdict-reason">Analyzing...</p>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div class="cards-wrap" id="cards-wrap"></div>
+
+      <!-- Actions -->
+      <div class="result-actions-row">
+        <button id="copy-btn" class="ghost-btn"><span>📋</span><span>Copy</span></button>
+        <button id="rerun-btn" class="ghost-btn"><span>↻</span><span>Re-analyze</span></button>
+        <button id="reset-btn" class="ghost-btn ghost-btn--danger"><span>✕</span><span>Reset</span></button>
+      </div>
+
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden">
+      <div class="error-box">
+        <p class="error-icon">⚠</p>
+        <p class="error-text" id="error-message">Something went wrong.</p>
+        <button id="retry-btn" class="secondary-btn">Try Again</button>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="hidden">
+      <div class="settings-header">
+        <span>API Settings</span>
+        <button id="settings-close" class="settings-close">✕</button>
+      </div>
+      <div class="settings-body">
+        <label class="settings-label">Model <span class="settings-hint">— Gemini Direct</span></label>
+        <select id="model-select" class="settings-input model-select">
+          <option value="gemini-3.5-flash">Gemini 3.5 Flash ✦ (default · IO26)</option>
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite</option>
+        </select>
+        <label class="settings-label">Gemini API Key</label>
+        <div class="settings-row">
+          <input type="password" id="gemini-key-input" class="settings-input" placeholder="Paste Gemini key..." />
+          <button id="toggle-gemini-key" class="toggle-vis-btn">👁</button>
+        </div>
+        <label class="settings-label">OpenRouter API Key <span class="settings-hint">(fallback)</span></label>
+        <div class="settings-row">
+          <input type="password" id="openrouter-key-input" class="settings-input" placeholder="Paste OpenRouter key..." />
+          <button id="toggle-openrouter-key" class="toggle-vis-btn">👁</button>
+        </div>
+        <div class="settings-actions">
+          <button id="save-keys-btn" class="primary-btn" style="padding:8px 12px;font-size:12px;">Save</button>
+          <button id="clear-keys-btn" class="secondary-btn">Clear All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Built by <a href="https://x.com/happy_ships" target="_blank">@happy_ships</a></span>
+      <span>Day 12/180</span>
+    </div>
+
+  </div>
+
+  <script src="gemini.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
