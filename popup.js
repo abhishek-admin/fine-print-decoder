@@ -200,6 +200,13 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(card);
     });
 
+    // Show which model was used in the score label area
+    chrome.storage.local.get(['gemini_model'], (d) => {
+      const model = d.gemini_model || 'gemini-3.5-flash';
+      const label = document.querySelector('.score-label');
+      if (label) label.title = `Analyzed by ${model}`;
+    });
+
     showState('result');
     result.classList.add('fade-in');
   }
